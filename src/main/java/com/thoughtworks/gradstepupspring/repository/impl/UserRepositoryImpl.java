@@ -14,6 +14,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User create(User user) {
+        UserStorage.addUser(user);
         return user;
     }
 }

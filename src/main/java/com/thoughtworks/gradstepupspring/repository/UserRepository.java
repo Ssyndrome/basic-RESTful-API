@@ -7,4 +7,7 @@ import java.util.Collection;
 public interface UserRepository {
     Collection<User> findUsers();
 
+    User create(User user);
+
+    boolean checkIfValidUser();
 }
