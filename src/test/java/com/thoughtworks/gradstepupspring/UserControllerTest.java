@@ -12,9 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -68,7 +66,7 @@ class UserControllerTest {
         mockMvc.perform(put("/api/users/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(newUser)))
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("cun hua"));
 
@@ -78,14 +76,13 @@ class UserControllerTest {
     }
 
     @Test
-    void should_return_bad_request_as_updated_user_match_no_input_id() throws Exception {
-        User originalUser = new User(2, "er gou");
+    void should_succeed_delete_the_input_id_matchable_user() throws Exception {
+        User originalUser = new User(1, "er gou");
         UserStorage.addUser(originalUser);
 
-        User newUser = new User(1, "cun hua");
-        mockMvc.perform(put("/api/users/2")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(newUser)))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/api/users/1"))
+                .andExpect(status().isNoContent());
+
+        assertEquals(0, UserStorage.getUSERS().size());
     }
 }

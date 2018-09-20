@@ -27,10 +27,12 @@ public class UserController {
 
     @PutMapping("/api/users/{id}")
     public ResponseEntity updateUser(@PathVariable int id, @RequestBody User user) {
-        try {
-            return new ResponseEntity<>(userRepository.updateUser(id, user), HttpStatus.ACCEPTED);
-        } catch (Exception exception) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(userRepository.updateUser(id, user), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/api/users/{id}")
+    public ResponseEntity deleteUser(@PathVariable int id) {
+        userRepository.deleteUser(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

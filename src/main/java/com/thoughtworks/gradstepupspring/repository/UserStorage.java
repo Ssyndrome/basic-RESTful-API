@@ -28,4 +28,8 @@ public class UserStorage {
     public static User getUserById(int id) {
         return USERS.get(id);
     }
+
+    public static void deleteUserById(int id) {
+        USERS.remove(id);
+    }
 }
