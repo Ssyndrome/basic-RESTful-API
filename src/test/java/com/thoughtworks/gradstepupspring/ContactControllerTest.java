@@ -26,6 +26,7 @@ public class ContactControllerTest {
     private User anotherUser;
     private Contact originalContact;
     private Contact anotherContact;
+    private Contact contactWithSameName;
 
     @BeforeEach
     void setUp() {
@@ -37,6 +38,8 @@ public class ContactControllerTest {
         anotherUser = new User(10, "Sem");
         originalContact = new Contact(1, "Cartridge", 21, "male", 18872688331L);
         anotherContact = new Contact(1, "Car", 18, "male", 158L);
+        contactWithSameName = new Contact(6, "Cartridge", 18, "male", 158L);
+
         UserStorage.addUser(originalUser);
     }
 
@@ -115,10 +118,30 @@ public class ContactControllerTest {
     void should_succeed_delete_one_contact_by_id_and_user_id() throws Exception {
         originalUser.setContact(originalContact);
         ContactStorage.add(originalContact);
+
         mockMvc.perform(delete("/api/users/9/contacts/1"))
                 .andExpect(status().isNoContent());
 
         assertThat(originalUser.getContacts().size()).isZero();
         assertThat(ContactStorage.getAllContacts().size()).isZero();
+    }
+
+    @Test
+    void should_succeed_get_contact_by_user_name_and_contact_name() throws Exception {
+        originalUser.setContact(originalContact);
+        ContactStorage.add(originalContact);
+        UserStorage.addUser(anotherUser);
+        anotherUser.setContact(contactWithSameName);
+        ContactStorage.add(contactWithSameName);
+
+        mockMvc.perform(get("/api/users/contacts")
+                .param("userName", "Syndrome")
+                .param("contactName", "Cartridge"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Cartridge"))
+                .andExpect(jsonPath("$.age").value(21))
+                .andExpect(jsonPath("$.gender").value("male"))
+                .andExpect(jsonPath("$.tel").value(18872688331L));
     }
 }

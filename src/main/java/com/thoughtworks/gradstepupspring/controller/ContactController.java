@@ -46,4 +46,12 @@ public class ContactController {
         contactRepository.deleteOneContact(userId, contactId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/api/users/contacts")
+    private ResponseEntity queryContact(@RequestParam String userName,
+                                        @RequestParam String contactName) {
+        return new ResponseEntity<>(
+                contactRepository.queryContactWithUserNameAndContactName(userName, contactName)
+                , HttpStatus.OK);
+    }
 }

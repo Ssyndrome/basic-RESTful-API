@@ -5,6 +5,8 @@ import com.thoughtworks.gradstepupspring.domain.User;
 import com.thoughtworks.gradstepupspring.repository.ContactRepository;
 import com.thoughtworks.gradstepupspring.repository.UserStorage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ContactRepositoryImpl implements ContactRepository {
@@ -34,5 +36,17 @@ public class ContactRepositoryImpl implements ContactRepository {
     public void deleteOneContact(int userId, int contactId) {
         UserStorage.deleteUserContactById(userId, contactId);
         ContactStorage.deleteConcatById(contactId);
+    }
+
+    @Override
+    public Contact queryContactWithUserNameAndContactName(String userName, String contactName) {
+        List<Contact> results = new ArrayList<>();
+        UserStorage.findUserByName(userName).getContacts().forEach(
+                (id, contact) -> {
+                    if (contact.getName().equals(contactName)) {
+                        results.add(contact);
+                    }
+                });
+        return results.get(0);
     }
 }

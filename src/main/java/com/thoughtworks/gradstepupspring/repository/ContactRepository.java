@@ -13,4 +13,6 @@ public interface ContactRepository {
     Contact updateOneContact(int userId, Contact contact);
 
     void deleteOneContact(int userId, int contactId);
+
+    Contact queryContactWithUserNameAndContactName(String userName, String contactName);
 }

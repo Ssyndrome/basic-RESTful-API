@@ -37,4 +37,8 @@ public class UserStorage {
     public static void deleteUserContactById(int userId, int contactId) {
         getUserById(userId).getContacts().remove(contactId);
     }
+
+    public static User findUserByName(String userName) {
+        return USERS.values().stream().filter(user -> user.getName().equals(userName)).findFirst().get();
+    }
 }
