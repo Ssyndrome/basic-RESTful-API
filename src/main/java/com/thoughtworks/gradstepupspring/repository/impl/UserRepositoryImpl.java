@@ -17,4 +17,10 @@ public class UserRepositoryImpl implements UserRepository {
         UserStorage.addUser(user);
         return user;
     }
+
+    @Override
+    public User updateUser(User user) {
+        UserStorage.getUserById(user.getId()).setName(user.getName());
+        return user;
+    }
 }

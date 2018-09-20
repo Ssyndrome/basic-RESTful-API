@@ -9,5 +9,5 @@ public interface UserRepository {
 
     User create(User user);
 
-    boolean checkIfValidUser();
+    User updateUser(User user);
 }

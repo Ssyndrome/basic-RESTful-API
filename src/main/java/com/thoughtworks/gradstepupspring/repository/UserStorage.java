@@ -24,4 +24,8 @@ public class UserStorage {
     public static void clear() {
         USERS.clear();
     }
+
+    public static User getUserById(int id) {
+        return USERS.get(id);
+    }
 }

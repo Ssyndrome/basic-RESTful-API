@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -55,5 +56,23 @@ class UserControllerTest {
         int scaledSize = UserStorage.getUSERS().size();
 
         assertEquals(expectedSize, scaledSize);
+    }
+
+    @Test
+    void should_succeed_update_original_user() throws Exception {
+        User originalUser = new User(1, "er gou");
+        UserStorage.addUser(originalUser);
+
+        User newUser = new User(1, "cun hua");
+        mockMvc.perform(put("/api/users/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(newUser)))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("cun hua"));
+
+        String updatedName = UserStorage.getUserById(1).getName();
+
+        assertEquals("cun hua", updatedName);
     }
 }
