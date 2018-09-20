@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.useDefaultDateFormatsOnly;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,5 +74,17 @@ public class ContactControllerTest {
         assertThat(anotherUserContactsAmount).isEqualTo(0);
 
         UserStorage.clear();
+    }
+
+    @Test
+    void should_get_all_valid_contacts_of_one_user() throws Exception {
+        originalUser.setContact(originalContact);
+        mockMvc.perform(get("/api/users/9/contacts"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.1.id").value(1))
+                .andExpect(jsonPath("$.1.name").value("Cartridge"))
+                .andExpect(jsonPath("$.1.age").value(21))
+                .andExpect(jsonPath("$.1.gender").value("male"))
+                .andExpect(jsonPath("$.1.tel").value(18872688331L));
     }
 }
