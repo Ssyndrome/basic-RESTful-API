@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 public class ContactControllerTest {
     private MockMvc mockMvc;
     private User originalUser;
+    private User anotherUser;
     private Contact originalContact;
 
     @BeforeEach
@@ -30,6 +31,7 @@ public class ContactControllerTest {
 
         mockMvc = standaloneSetup(new ContactController()).build();
         originalUser = new User(9, "Syndrome");
+        anotherUser = new User(10, "Sem");
         originalContact = new Contact(1, "Cartridge", 21, "male", 18872688331L);
         UserStorage.addUser(originalUser);
     }
@@ -52,5 +54,24 @@ public class ContactControllerTest {
         assertThat(addedContact.getName()).isEqualTo(originalContact.getName());
         assertThat(addedContact.getGender()).isEqualTo(originalContact.getGender());
         assertThat(addedContact.getTel()).isEqualTo(originalContact.getTel());
+    }
+
+    @Test
+    void should_fail_to_create_one_repeated_id_contact() throws Exception{
+        mockMvc.perform(post("/api/users/9/contacts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(originalContact)))
+                .andExpect(status().isCreated());
+        UserStorage.addUser(anotherUser);
+
+        mockMvc.perform(post("/api/users/10/contacts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(originalContact)))
+                .andExpect(status().isBadRequest());
+
+        int anotherUserContactsAmount = UserStorage.getUserById(10).getContacts().size();
+        assertThat(anotherUserContactsAmount).isEqualTo(0);
+
+        UserStorage.clear();
     }
 }
