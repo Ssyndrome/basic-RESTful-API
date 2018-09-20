@@ -25,8 +25,18 @@ public class ContactController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("/api/users/{userId}/contacts")
     private ResponseEntity getAllContacts(@PathVariable int userId) {
         return new ResponseEntity<>(contactRepository.getContactsByUserId(userId),HttpStatus.OK);
+    }
+
+    @PutMapping("/api/users/{userId}/contacts/{contactId}")
+    private ResponseEntity updateContact(@PathVariable int userId,
+                                         @PathVariable int contactId,
+                                         @RequestBody Contact contact) {
+        return new ResponseEntity<>(
+                contactRepository.updateOneContact(userId, contact)
+                , HttpStatus.OK);
     }
 }

@@ -23,6 +23,7 @@ public class UserStorage {
 
     public static void clear() {
         USERS.clear();
+        USERS.forEach((id, user) -> user.getContacts().clear());
     }
 
     public static User getUserById(int id) {

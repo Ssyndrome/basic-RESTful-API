@@ -16,4 +16,16 @@ public class ContactStorage {
         Arrays.stream(contacts).forEach(contact -> CONTACTS.put(contact.getId(), contact));
         return true;
     }
+
+    public static void coverContactById(Contact contact) {
+        CONTACTS.put(contact.getId(), contact);
+    }
+
+    public static Contact getContactById(Integer id) {
+        return CONTACTS.get(id);
+    }
+
+    public static void clear() {
+        CONTACTS.clear();
+    }
 }

@@ -5,6 +5,7 @@ import com.thoughtworks.gradstepupspring.controller.ContactController;
 import com.thoughtworks.gradstepupspring.domain.Contact;
 import com.thoughtworks.gradstepupspring.domain.User;
 import com.thoughtworks.gradstepupspring.repository.UserStorage;
+import com.thoughtworks.gradstepupspring.repository.impl.ContactStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.useDefaultDateFormatsOnly;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -25,15 +27,18 @@ public class ContactControllerTest {
     private User originalUser;
     private User anotherUser;
     private Contact originalContact;
+    private Contact anotherContact;
 
     @BeforeEach
     void setUp() {
         UserStorage.clear();
+        ContactStorage.clear();
 
         mockMvc = standaloneSetup(new ContactController()).build();
         originalUser = new User(9, "Syndrome");
         anotherUser = new User(10, "Sem");
         originalContact = new Contact(1, "Cartridge", 21, "male", 18872688331L);
+        anotherContact = new Contact(1, "Car", 18, "male", 158L);
         UserStorage.addUser(originalUser);
     }
 
@@ -87,4 +92,25 @@ public class ContactControllerTest {
                 .andExpect(jsonPath("$.1.gender").value("male"))
                 .andExpect(jsonPath("$.1.tel").value(18872688331L));
     }
+
+    @Test
+    void should_succeed_update_one_contact_of_one_user_by_user_id() throws Exception {
+        originalUser.setContact(originalContact);
+        mockMvc.perform(put("/api/users/9/contacts/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(anotherContact)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Car"))
+                .andExpect(jsonPath("$.age").value(18))
+                .andExpect(jsonPath("$.gender").value("male"))
+                .andExpect(jsonPath("$.tel").value(158L));
+
+        Contact originalContactInRepository = ContactStorage.getContactById(originalContact.getId());
+        assertThat(originalContactInRepository.getName()).isEqualTo("Car");
+        assertThat(originalContactInRepository.getAge()).isEqualTo(18);
+        assertThat(originalContactInRepository.getGender()).isEqualTo("male");
+        assertThat(originalContactInRepository.getTel()).isEqualTo(158L);
+    }
+
 }

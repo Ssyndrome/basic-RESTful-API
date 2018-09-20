@@ -37,4 +37,27 @@ public class Contact {
     public long getTel() {
         return tel;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setTel(long tel) {
+        this.tel = tel;
+    }
+
+    public void updateField(Contact contact) {
+        setName(contact.getName());
+        setAge(contact.getAge());
+        setGender(contact.getGender());
+        setTel(contact.getTel());
+    }
 }

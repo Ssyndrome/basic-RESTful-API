@@ -9,4 +9,6 @@ public interface ContactRepository {
     boolean createContactForAnUser(User user, Contact contact);
 
     Map<Integer, Contact> getContactsByUserId(int userId);
+
+    Contact updateOneContact(int userId, Contact contact);
 }

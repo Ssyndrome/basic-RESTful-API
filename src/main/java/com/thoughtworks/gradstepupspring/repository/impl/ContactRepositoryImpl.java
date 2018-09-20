@@ -22,4 +22,11 @@ public class ContactRepositoryImpl implements ContactRepository {
     public Map<Integer, Contact> getContactsByUserId(int userId) {
         return UserStorage.getUserById(userId).getContacts();
     }
+
+    @Override
+    public Contact updateOneContact(int userId, Contact contact) {
+        UserStorage.getUserById(userId).getContacts().get(contact.getId()).updateField(contact);
+        ContactStorage.coverContactById(contact);
+        return contact;
+    }
 }
