@@ -29,4 +29,10 @@ public class ContactRepositoryImpl implements ContactRepository {
         ContactStorage.coverContactById(contact);
         return contact;
     }
+
+    @Override
+    public void deleteOneContact(int userId, int contactId) {
+        UserStorage.deleteUserContactById(userId, contactId);
+        ContactStorage.deleteConcatById(contactId);
+    }
 }

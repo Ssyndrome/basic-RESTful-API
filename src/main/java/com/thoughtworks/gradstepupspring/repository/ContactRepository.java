@@ -11,4 +11,6 @@ public interface ContactRepository {
     Map<Integer, Contact> getContactsByUserId(int userId);
 
     Contact updateOneContact(int userId, Contact contact);
+
+    void deleteOneContact(int userId, int contactId);
 }

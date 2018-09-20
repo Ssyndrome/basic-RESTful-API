@@ -28,4 +28,12 @@ public class ContactStorage {
     public static void clear() {
         CONTACTS.clear();
     }
+
+    public static Map<Integer, Contact> getAllContacts() {
+        return CONTACTS;
+    }
+
+    public static void deleteConcatById(Integer id) {
+        CONTACTS.remove(id);
+    }
 }

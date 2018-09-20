@@ -28,7 +28,7 @@ public class ContactController {
 
     @GetMapping("/api/users/{userId}/contacts")
     private ResponseEntity getAllContacts(@PathVariable int userId) {
-        return new ResponseEntity<>(contactRepository.getContactsByUserId(userId),HttpStatus.OK);
+        return new ResponseEntity<>(contactRepository.getContactsByUserId(userId), HttpStatus.OK);
     }
 
     @PutMapping("/api/users/{userId}/contacts/{contactId}")
@@ -38,5 +38,12 @@ public class ContactController {
         return new ResponseEntity<>(
                 contactRepository.updateOneContact(userId, contact)
                 , HttpStatus.OK);
+    }
+
+    @DeleteMapping("/api/users/{userId}/contacts/{contactId}")
+    private ResponseEntity deleteContact(@PathVariable int userId,
+                                         @PathVariable int contactId) {
+        contactRepository.deleteOneContact(userId, contactId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

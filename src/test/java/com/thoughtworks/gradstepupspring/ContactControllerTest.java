@@ -15,9 +15,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.useDefaultDateFormatsOnly;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -113,4 +111,14 @@ public class ContactControllerTest {
         assertThat(originalContactInRepository.getTel()).isEqualTo(158L);
     }
 
+    @Test
+    void should_succeed_delete_one_contact_by_id_and_user_id() throws Exception {
+        originalUser.setContact(originalContact);
+        ContactStorage.add(originalContact);
+        mockMvc.perform(delete("/api/users/9/contacts/1"))
+                .andExpect(status().isNoContent());
+
+        assertThat(originalUser.getContacts().size()).isZero();
+        assertThat(ContactStorage.getAllContacts().size()).isZero();
+    }
 }

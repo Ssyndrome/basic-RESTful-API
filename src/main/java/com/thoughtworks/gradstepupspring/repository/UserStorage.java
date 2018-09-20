@@ -33,4 +33,8 @@ public class UserStorage {
     public static void deleteUserById(int id) {
         USERS.remove(id);
     }
+
+    public static void deleteUserContactById(int userId, int contactId) {
+        getUserById(userId).getContacts().remove(contactId);
+    }
 }
