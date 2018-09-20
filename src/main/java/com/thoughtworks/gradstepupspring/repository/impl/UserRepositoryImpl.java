@@ -19,8 +19,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User updateUser(User user) {
-        UserStorage.getUserById(user.getId()).setName(user.getName());
+    public User updateUser(int id, User user) throws Exception {
+        if (user.getId() != id) {
+            throw new Exception("Invalid updated user");
+        }
+        UserStorage.getUserById(id).setName(user.getName());
         return user;
     }
 }

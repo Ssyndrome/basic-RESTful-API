@@ -1,5 +1,6 @@
 package com.thoughtworks.gradstepupspring;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.gradstepupspring.controller.UserController;
 import com.thoughtworks.gradstepupspring.domain.User;
@@ -74,5 +75,17 @@ class UserControllerTest {
         String updatedName = UserStorage.getUserById(1).getName();
 
         assertEquals("cun hua", updatedName);
+    }
+
+    @Test
+    void should_return_bad_request_as_updated_user_match_no_input_id() throws Exception {
+        User originalUser = new User(2, "er gou");
+        UserStorage.addUser(originalUser);
+
+        User newUser = new User(1, "cun hua");
+        mockMvc.perform(put("/api/users/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(newUser)))
+                .andExpect(status().isBadRequest());
     }
 }

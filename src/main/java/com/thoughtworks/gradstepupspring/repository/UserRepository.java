@@ -9,5 +9,5 @@ public interface UserRepository {
 
     User create(User user);
 
-    User updateUser(User user);
+    User updateUser(int id, User user) throws Exception;
 }

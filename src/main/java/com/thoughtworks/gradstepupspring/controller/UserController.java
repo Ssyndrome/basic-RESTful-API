@@ -27,6 +27,10 @@ public class UserController {
 
     @PutMapping("/api/users/{id}")
     public ResponseEntity updateUser(@PathVariable int id, @RequestBody User user) {
-        return new ResponseEntity(userRepository.updateUser(user), HttpStatus.ACCEPTED);
+        try {
+            return new ResponseEntity<>(userRepository.updateUser(id, user), HttpStatus.ACCEPTED);
+        } catch (Exception exception) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 }
